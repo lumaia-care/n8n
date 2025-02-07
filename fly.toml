@@ -1,0 +1,41 @@
+# fly.toml
+
+app = "n8n Lumaia Hub"
+
+# Use the official n8n image without a local Dockerfile
+[build]
+  image = "n8nio/n8n:latest"
+
+# Environment variables for n8n
+[env]
+  # Make n8n listen on 0.0.0.0:5678
+  N8N_HOST = "0.0.0.0"
+  N8N_PORT = "5678"
+
+  # Optional: Basic authentication (HIGHLY recommended for public exposure)
+  N8N_BASIC_AUTH_ACTIVE = "true"
+  N8N_BASIC_AUTH_USER = "admin"
+
+# The services section tells Fly how to route traffic
+[[services]]
+  internal_port = 5678
+  processes = ["app"]
+
+  [services.concurrency]
+    type = "connections"
+    soft_limit = 25
+    hard_limit = 50
+
+  # HTTP and HTTPS
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+# Mount a Fly volume called "n8n_data" to store n8n's data persistently
+[mounts]
+  source = "n8n_data"
+  destination = "/home/node/.n8n"
