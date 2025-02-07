@@ -1,6 +1,6 @@
 # fly.toml
 
-app = "n8n Lumaia Hub"
+app = "n8n-lumaia-hub"
 
 # Use the official n8n image without a local Dockerfile
 [build]
